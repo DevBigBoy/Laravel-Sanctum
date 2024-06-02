@@ -20,14 +20,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 /**
- * Authentication
+ *
+ * Public Routes
  */
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
 /**
- * Tasks
+ *
+ * Protected Routes
  */
-Route::resource('tasks', TasksController::class);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::resource('/tasks', TasksController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
